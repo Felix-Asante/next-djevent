@@ -4,7 +4,10 @@ import styles from "@/styles/Event.module.css";
 import Link from "next/link";
 import { FaPencilAlt, FaTimes } from "react-icons/fa";
 import Image from "next/image";
+import { GET_ALL_EVENTS } from "@/config/ApiRoutes";
 export default function SingleEvent({ evt }) {
+	console.log(evt);
+
 	const deleteEvent = () => {};
 	return (
 		<Layout>
@@ -53,16 +56,16 @@ export default function SingleEvent({ evt }) {
 // eventually increasing performance and SEO
 
 export async function getStaticPaths() {
-	const res = await fetch(`${API_URL}events/`);
-	const events = await res.json();
+	const res = await fetch(`${API_URL}${GET_ALL_EVENTS}`);
+	const { data } = await res.json();
 	// you should return this structure:
 	// return {
 	//     paths:[{params:{path}}]
 	// }
 
-	const paths = events.map((evt) => ({
+	const paths = data.map(({ attributes }) => ({
 		params: {
-			slug: evt?.slug,
+			slug: attributes?.slug,
 		},
 	}));
 	return {
@@ -71,7 +74,8 @@ export async function getStaticPaths() {
 	};
 }
 export async function getStaticProps({ params: { slug } }) {
-	const res = await fetch(`${API_URL}events/${slug}`);
+	console.log(`${API_URL}events/${slug}`);
+	const res = await fetch(`${API_URL}/events/${slug}`);
 	const events = await res.json();
 	return {
 		props: { evt: events[0] },

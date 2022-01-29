@@ -2,6 +2,7 @@ import Layout from "@/components/Layout";
 import { API_URL } from "@/config/index";
 import EventItem from "@/components/EventItem";
 import Link from "next/link";
+import { GET_ALL_EVENTS } from "@/config/ApiRoutes";
 export default function Home({ events }) {
 	return (
 		<Layout>
@@ -16,10 +17,10 @@ export default function Home({ events }) {
 }
 
 export async function getStaticProps() {
-	const res = await fetch(`${API_URL}events/`);
-	const events = await res.json();
+	const res = await fetch(`${API_URL}${GET_ALL_EVENTS}`);
+	const { data } = await res.json();
 	return {
-		props: { events: events.slice(0, 4) },
+		props: { events: data },
 		revalidate: 1 /**re-evaluate this after every 1s when data changes: ISR next */,
 	};
 }
