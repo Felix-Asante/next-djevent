@@ -5,8 +5,13 @@ import Link from "next/link";
 import { FaPencilAlt, FaTimes } from "react-icons/fa";
 import Image from "next/image";
 import { GET_ALL_EVENTS } from "@/config/ApiRoutes";
+import { ToastContainer, toast } from "react-toastify";
+
 export default function SingleEvent({ evt }) {
-	const deleteEvent = () => {};
+	const deleteEvent = (e) => {
+		console.log(e);
+	};
+
 	return (
 		<Layout>
 			<div className={styles.event}>
@@ -24,7 +29,8 @@ export default function SingleEvent({ evt }) {
 					{evt?.attributes?.date} at {evt?.attributes?.time}
 				</span>
 				<h1>{evt?.attributes?.name}</h1>
-				{evt?.attributes?.image && (
+				<ToastContainer />
+				{evt?.attributes?.image?.data && (
 					<div className={styles.image}>
 						<Image
 							src={
@@ -32,6 +38,7 @@ export default function SingleEvent({ evt }) {
 							}
 							width={960}
 							height={600}
+							alt={evt?.attributes?.name}
 						/>
 					</div>
 				)}

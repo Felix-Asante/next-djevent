@@ -31,6 +31,7 @@ export async function getServerSideProps({ query: { term } }) {
 				{ name: { $contains: term } },
 				{ description: { $contains: term } },
 				{ venue: { $contains: term } },
+				{ address: { $contains: term } },
 				{ performers: { $contains: term } },
 				{ slug: { $contains: term } },
 			],
