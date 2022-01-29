@@ -1,5 +1,6 @@
 import Link from "next/link";
 import styles from "@/styles/header.module.css";
+import Search from "./search";
 export default function Header() {
 	return (
 		<header className={styles.header}>
@@ -8,6 +9,7 @@ export default function Header() {
 					<a href="">DJ Events</a>
 				</Link>
 			</div>
+			<Search />
 			<nav>
 				<ul>
 					<li>
