@@ -6,8 +6,6 @@ import { FaPencilAlt, FaTimes } from "react-icons/fa";
 import Image from "next/image";
 import { GET_ALL_EVENTS } from "@/config/ApiRoutes";
 export default function SingleEvent({ evt }) {
-	console.log(evt);
-
 	const deleteEvent = () => {};
 	return (
 		<Layout>
@@ -23,24 +21,26 @@ export default function SingleEvent({ evt }) {
 					</a>
 				</div>
 				<span>
-					{evt?.date} at {evt?.time}
+					{evt?.attributes?.date} at {evt?.attributes?.time}
 				</span>
-				<h1>{evt?.name}</h1>
-				{evt?.image && (
+				<h1>{evt?.attributes?.name}</h1>
+				{evt?.attributes?.image && (
 					<div className={styles.image}>
 						<Image
-							src={evt?.image ? evt?.image : "/images/event-default.png"}
+							src={
+								evt?.attributes?.image?.data?.attributes?.formats?.large?.url
+							}
 							width={960}
 							height={600}
 						/>
 					</div>
 				)}
 				<h3>Performers:</h3>
-				<p>{evt?.performers}</p>
+				<p>{evt?.attributes?.performers}</p>
 				<h3>Description</h3>
-				<p>{evt?.description}</p>
-				<h3>Venue: {evt?.venue}</h3>
-				<p>{evt?.address}</p>
+				<p>{evt?.attributes?.description}</p>
+				<h3>Venue: {evt?.attributes?.venue}</h3>
+				<p>{evt?.attributes?.address}</p>
 				<Link href="/events">
 					<a href={styles.back}>{"<"} Go back</a>
 				</Link>
@@ -74,11 +74,14 @@ export async function getStaticPaths() {
 	};
 }
 export async function getStaticProps({ params: { slug } }) {
-	console.log(`${API_URL}events/${slug}`);
-	const res = await fetch(`${API_URL}/events/${slug}`);
-	const events = await res.json();
+	// console.log(API_URL + `/events?filters[slug][$eq]=${slug}&populate=*`);
+	const res = await fetch(
+		API_URL + `/events?filters[slug][$eq]=${slug}&populate=*`
+	);
+	const { data } = await res.json();
+	// console.log(data);
 	return {
-		props: { evt: events[0] },
+		props: { evt: data[0] },
 		revalidate: 1,
 	};
 }
