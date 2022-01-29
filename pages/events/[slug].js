@@ -6,18 +6,34 @@ import { FaPencilAlt, FaTimes } from "react-icons/fa";
 import Image from "next/image";
 import { GET_ALL_EVENTS } from "@/config/ApiRoutes";
 import { ToastContainer, toast } from "react-toastify";
-
+import { useRouter } from "next/router";
 export default function SingleEvent({ evt }) {
-	const deleteEvent = (e) => {
-		console.log(e);
+	const router = useRouter();
+	const deleteEvent = async () => {
+		if (!confirm("Are you sure you want to delete this post")) {
+			return;
+		}
+		const res = await fetch(`${API_URL}/events/${evt.id}`, {
+			method: "DELETE",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+		const { data } = await res.json();
+
+		if (!data?.attributes) {
+			toast.error("Something went wrong");
+			return;
+		}
+		router.push("/events");
 	};
 
 	return (
 		<Layout>
 			<div className={styles.event}>
 				<div className={styles.controls}>
-					<Link href={`/events/edit/${evt?.id}`}>
-						<a href="">
+					<Link href={`/events/edit/${evt.id}`}>
+						<a href={`/events/edit/${evt.id}`}>
 							<FaPencilAlt /> Edit Event
 						</a>
 					</Link>
@@ -29,7 +45,7 @@ export default function SingleEvent({ evt }) {
 					{evt?.attributes?.date} at {evt?.attributes?.time}
 				</span>
 				<h1>{evt?.attributes?.name}</h1>
-				<ToastContainer />
+				<ToastContainer theme="colored" />
 				{evt?.attributes?.image?.data && (
 					<div className={styles.image}>
 						<Image
@@ -86,7 +102,7 @@ export async function getStaticProps({ params: { slug } }) {
 		API_URL + `/events?filters[slug][$eq]=${slug}&populate=*`
 	);
 	const { data } = await res.json();
-	// console.log(data);
+
 	return {
 		props: { evt: data[0] },
 		revalidate: 1,
