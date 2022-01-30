@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Layout from "@/components/Layout";
 import Link from "next/link";
 import { API_URL } from "@/config/index";
@@ -6,6 +6,8 @@ import { useRouter } from "next/router";
 import styles from "@/styles/Form.module.css";
 import { ToastContainer, toast } from "react-toastify";
 import moment from "moment";
+import Image from "next/image";
+import { FaImage } from "react-icons/fa";
 export default function EditEvent({ evt }) {
 	const nameRef = useRef();
 	const performersRef = useRef();
@@ -63,8 +65,11 @@ export default function EditEvent({ evt }) {
 		}
 	};
 
-	const { name, description, venue, address, time, performers, date } =
+	const { name, description, venue, address, time, performers, date, image } =
 		evt.attributes;
+	const [imagePreview, setImagePreview] = useState(
+		image?.data ? image?.data?.attributes?.formats?.thumbnail?.url : null
+	);
 	return (
 		<Layout title="Edit event">
 			<Link href="/events">Go back</Link>
@@ -145,6 +150,17 @@ export default function EditEvent({ evt }) {
 				</div>
 				<input type="submit" value="Update Event" className="btn" />
 			</form>
+			<h2>Event Image</h2>
+			{imagePreview ? (
+				<Image src={imagePreview} height={100} width={170} />
+			) : (
+				<div>No image uploaded</div>
+			)}
+			<div>
+				<button className="btn-secondary">
+					<FaImage /> Set Image
+				</button>
+			</div>
 		</Layout>
 	);
 }
