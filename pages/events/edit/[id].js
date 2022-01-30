@@ -8,7 +8,11 @@ import { ToastContainer, toast } from "react-toastify";
 import moment from "moment";
 import Image from "next/image";
 import { FaImage } from "react-icons/fa";
+import Modal from "@/components/Modal";
+import ImageUpload from "@/components/ImageUpload";
 export default function EditEvent({ evt }) {
+	const { name, description, venue, address, time, performers, date, image } =
+		evt.attributes;
 	const nameRef = useRef();
 	const performersRef = useRef();
 	const venueRef = useRef();
@@ -18,6 +22,11 @@ export default function EditEvent({ evt }) {
 	const descriptionRef = useRef();
 
 	const router = useRouter();
+
+	const [imagePreview, setImagePreview] = useState(
+		image?.data ? image?.data?.attributes?.formats?.thumbnail?.url : null
+	);
+	const [sending, setSending] = useState(false);
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		const name = nameRef.current.value;
@@ -64,12 +73,20 @@ export default function EditEvent({ evt }) {
 			router.push(`/events/${values.slug}`);
 		}
 	};
+	const imageUploaded = async () => {
+		const res = await fetch(API_URL + `/events/${evt.id}?populate=*`);
+		const {
+			data: { attributes },
+		} = await res.json();
+		// console.log(attributes);
+		setImagePreview(
+			attributes?.image?.data?.attributes?.formats?.thumbnail?.url
+		);
+		setSending(false);
+		setShowModal(false);
+	};
 
-	const { name, description, venue, address, time, performers, date, image } =
-		evt.attributes;
-	const [imagePreview, setImagePreview] = useState(
-		image?.data ? image?.data?.attributes?.formats?.thumbnail?.url : null
-	);
+	const [showModal, setShowModal] = useState(false);
 	return (
 		<Layout title="Edit event">
 			<Link href="/events">Go back</Link>
@@ -157,10 +174,18 @@ export default function EditEvent({ evt }) {
 				<div>No image uploaded</div>
 			)}
 			<div>
-				<button className="btn-secondary">
+				<button className="btn-secondary" onClick={() => setShowModal(true)}>
 					<FaImage /> Set Image
 				</button>
 			</div>
+			<Modal show={showModal} onClose={() => setShowModal(false)}>
+				<ImageUpload
+					evtId={evt.id}
+					imageUploaded={imageUploaded}
+					sending={sending}
+					setSending={setSending}
+				/>
+			</Modal>
 		</Layout>
 	);
 }
