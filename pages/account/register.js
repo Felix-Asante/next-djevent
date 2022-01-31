@@ -1,15 +1,19 @@
-import React, { useEffect, useContext, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { FaUser } from "react-icons/fa";
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import styles from "@/styles/AuthForm.module.css";
 import { ToastContainer, toast } from "react-toastify";
+import { useAuthContext } from "@/context/AuthContext";
+
 export default function RegisterPage() {
+	const { register, error } = useAuthContext();
 	const userNameRef = useRef();
 	const emailRef = useRef();
 	const passwordRef = useRef();
 	const confirmPasswordRef = useRef();
 
+	useEffect(() => error && toast.error(error));
 	const handleBlur = () => {
 		const password = passwordRef.current.value.trim();
 		const confirmPassword = confirmPasswordRef.current.value.trim();
@@ -23,8 +27,9 @@ export default function RegisterPage() {
 		e.preventDefault();
 		const email = emailRef.current.value.trim();
 		const password = passwordRef.current.value.trim();
-		const user = userNameRef.current.value.trim();
-		const data = { email, password, user };
+		const username = userNameRef.current.value.trim();
+
+		const data = { email, password, username };
 		const hasEmptyFields = Object.values(data).some(
 			(element) => element === ""
 		);
@@ -33,6 +38,7 @@ export default function RegisterPage() {
 			toast.error("Invalid credentials");
 			return;
 		}
+		register(data);
 	};
 	return (
 		<Layout title="User Login">

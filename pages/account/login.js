@@ -1,10 +1,13 @@
-import React, { useEffect, useContext, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { FaUser } from "react-icons/fa";
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import styles from "@/styles/AuthForm.module.css";
 import { ToastContainer, toast } from "react-toastify";
+import { useAuthContext } from "@/context/AuthContext";
 export default function LoginPage() {
+	const { login, error } = useAuthContext();
+	useEffect(() => error && toast.error(error));
 	const emailRef = useRef();
 	const passwordRef = useRef();
 
@@ -12,8 +15,8 @@ export default function LoginPage() {
 		e.preventDefault();
 		const email = emailRef.current.value.trim();
 		const password = passwordRef.current.value.trim();
-		const data = { email, password };
-		const hasEmptyFields = Object.values(data).some(
+		const user = { email, password };
+		const hasEmptyFields = Object.values(user).some(
 			(element) => element === ""
 		);
 
@@ -21,6 +24,7 @@ export default function LoginPage() {
 			toast.error("Invalid credentials");
 			return;
 		}
+		login(user);
 	};
 	return (
 		<Layout title="User Login">

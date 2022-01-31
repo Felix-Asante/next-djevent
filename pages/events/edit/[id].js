@@ -10,6 +10,7 @@ import Image from "next/image";
 import { FaImage } from "react-icons/fa";
 import Modal from "@/components/Modal";
 import ImageUpload from "@/components/ImageUpload";
+import cookie from "cookie";
 export default function EditEvent({ evt }) {
 	const { name, description, venue, address, time, performers, date, image } =
 		evt.attributes;
@@ -191,6 +192,7 @@ export default function EditEvent({ evt }) {
 }
 
 export async function getServerSideProps({ params }) {
+	// console.log(cookie.parse(req.headers.cookie));
 	const res = await fetch(`${API_URL}/events/${params.id}?populate=*`);
 	const { data } = await res.json();
 
