@@ -20,11 +20,13 @@ export default function Home({ events, page, total }) {
 
 export async function getServerSideProps({ query: { page = 1 } }) {
 	// Total  events
-	const eventRes = await fetch(`${API_URL}/events`);
-	const {
-		meta: { pagination },
-	} = await eventRes.json();
-	const total = pagination.total;
+	const eventRes = await fetch(`${API_URL}/events/count`);
+	const total = await eventRes.json();
+
+	// const {
+	// 	meta: { pagination },
+	// } = await eventRes.json();
+	// const total = pagination.total;
 
 	// start point for pagination
 	const start = +page === 1 ? 0 : (+page - 1) * 2;
