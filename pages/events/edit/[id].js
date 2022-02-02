@@ -10,7 +10,7 @@ import Image from "next/image";
 import { FaImage } from "react-icons/fa";
 import Modal from "@/components/Modal";
 import ImageUpload from "@/components/ImageUpload";
-import useCookie from "src/hooks/useCookie";
+import useCookie from "src/config/parseCookie";
 export default function EditEvent({ evt, token }) {
 	const { name, description, venue, address, time, performers, date, image } =
 		evt.attributes;

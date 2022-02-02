@@ -1,5 +1,5 @@
 import { API_URL } from "src/config";
-import useCookie from "src/hooks/useCookie";
+import useCookie from "src/config/parseCookie";
 export default async (req, res) => {
 	if (req.method === "GET") {
 		if (!req.headers.cookie) {

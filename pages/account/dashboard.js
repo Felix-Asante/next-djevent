@@ -1,7 +1,7 @@
 import React from "react";
 import Layout from "@/components/Layout";
 import { API_URL } from "src/config";
-import useCookie from "src/hooks/useCookie";
+import useCookie from "src/config/parseCookie";
 import styles from "@/styles/Dashboard.module.css";
 import DashboardEvent from "@/components/DashboardEvent";
 import { useRouter } from "next/router";

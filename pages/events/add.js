@@ -5,7 +5,7 @@ import { API_URL } from "@/config/index";
 import { useRouter } from "next/router";
 import styles from "@/styles/Form.module.css";
 import { ToastContainer, toast } from "react-toastify";
-import useCookie from "src/hooks/useCookie";
+import useCookie from "src/config/parseCookie";
 
 export default function AddEvent({ token }) {
 	const nameRef = useRef();
@@ -61,7 +61,7 @@ export default function AddEvent({ token }) {
 			toast.error("Something went wrong");
 		} else {
 			const evt = await res.json();
-			localStorage.setItem("res", JSON.stringify(evt));
+			// localStorage.setItem("res", JSON.stringify(evt));
 			// console.log(evt);
 			router.push(`/events/${evt.slug}`);
 		}

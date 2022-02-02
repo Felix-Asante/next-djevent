@@ -7,10 +7,9 @@ export default function ErrorPage() {
 		<Layout title="Page Not Found">
 			<div className="error">
 				<h1>
-					{" "}
-					<FaExclamationTriangle /> 404{" "}
+					<FaExclamationTriangle /> 404
 				</h1>
-				<h4>Sorry there's nothing here</h4>
+				<h4>Sorry there&apos;s nothing here</h4>
 				<Link href="/">Go back home</Link>
 			</div>
 		</Layout>
