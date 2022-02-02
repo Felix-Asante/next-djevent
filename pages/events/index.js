@@ -3,7 +3,7 @@ import { API_URL } from "@/config/index";
 import EventItem from "@/components/EventItem";
 import { GET_ALL_EVENTS } from "@/config/ApiRoutes";
 import Pagination from "@/components/Pagination";
-const PER_PAGE = 2;
+const PER_PAGE = 5;
 export default function Home({ events, page, total }) {
 	const lastPage = Math.ceil(total / PER_PAGE);
 	return (
