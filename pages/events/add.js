@@ -5,7 +5,7 @@ import { API_URL } from "@/config/index";
 import { useRouter } from "next/router";
 import styles from "@/styles/Form.module.css";
 import { ToastContainer, toast } from "react-toastify";
-import useCookie from "src/config/parseCookie";
+import parseCookie from "src/config/parseCookie";
 
 export default function AddEvent({ token }) {
 	const nameRef = useRef();
@@ -119,6 +119,6 @@ export default function AddEvent({ token }) {
 }
 
 export async function getServerSideProps({ req }) {
-	const token = useCookie(req.headers.cookie);
+	const token = parseCookie(req.headers.cookie);
 	return { props: { token } };
 }

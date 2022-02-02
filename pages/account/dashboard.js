@@ -1,7 +1,7 @@
 import React from "react";
 import Layout from "@/components/Layout";
 import { API_URL } from "src/config";
-import useCookie from "src/config/parseCookie";
+import parseCookie from "src/config/parseCookie";
 import styles from "@/styles/Dashboard.module.css";
 import DashboardEvent from "@/components/DashboardEvent";
 import { useRouter } from "next/router";
@@ -40,7 +40,7 @@ export default function DashboardPage({ events, token }) {
 }
 
 export async function getServerSideProps({ req }) {
-	const token = useCookie(req.headers.cookie);
+	const token = parseCookie(req.headers.cookie);
 
 	const res = await fetch(`${API_URL}/events/me`, {
 		headers: {

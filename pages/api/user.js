@@ -1,12 +1,12 @@
 import { API_URL } from "src/config";
-import useCookie from "src/config/parseCookie";
+import parseCookie from "src/config/parseCookie";
 export default async (req, res) => {
 	if (req.method === "GET") {
 		if (!req.headers.cookie) {
 			res.status(403).json({ message: "Not Authorized" });
 			return;
 		}
-		const token = useCookie(req.headers.cookie);
+		const token = parseCookie(req.headers.cookie);
 		const strapiRes = await fetch(API_URL + "/users/me", {
 			method: "GET",
 			headers: {
