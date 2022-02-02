@@ -42,7 +42,7 @@ export default function DashboardPage({ events, token }) {
 export async function getServerSideProps({ req }) {
 	const token = useCookie(req.headers.cookie);
 
-	const res = await fetch(API_URL + "/events/me", {
+	const res = await fetch(`${API_URL}/events/me`, {
 		headers: {
 			Authorization: `Bearer ${token}`,
 		},
