@@ -6,32 +6,12 @@ import { FaPencilAlt, FaTimes } from "react-icons/fa";
 import Image from "next/image";
 import { GET_ALL_EVENTS } from "@/config/ApiRoutes";
 import { ToastContainer, toast } from "react-toastify";
-import { useRouter } from "next/router";
+
 export default function SingleEvent({ evt }) {
-	const router = useRouter();
-	const deleteEvent = async () => {
-		if (!confirm("Are you sure you want to delete this post")) {
-			return;
-		}
-		const res = await fetch(`${API_URL}/events/${evt.id}`, {
-			method: "DELETE",
-			headers: {
-				"Content-Type": "application/json",
-			},
-		});
-		const { data } = await res.json();
-
-		if (!data?.attributes) {
-			toast.error("Something went wrong");
-			return;
-		}
-		router.push("/events");
-	};
-
 	return (
 		<Layout>
 			<div className={styles.event}>
-				<div className={styles.controls}>
+				{/* <div className={styles.controls}>
 					<Link href={`/events/edit/${evt.id}`}>
 						<a href={`/events/edit/${evt.id}`}>
 							<FaPencilAlt /> Edit Event
@@ -40,7 +20,7 @@ export default function SingleEvent({ evt }) {
 					<a href="#" className={styles.delete} onClick={deleteEvent}>
 						<FaTimes /> Delete Event
 					</a>
-				</div>
+				</div> */}
 				<span>
 					{evt?.attributes?.date} at {evt?.attributes?.time}
 				</span>
@@ -50,7 +30,7 @@ export default function SingleEvent({ evt }) {
 					<div className={styles.image}>
 						<Image
 							src={
-								evt?.attributes?.image?.data?.attributes?.formats?.large?.url
+								evt?.attributes?.image?.data?.attributes?.formats?.medium?.url
 							}
 							width={960}
 							height={600}
@@ -64,6 +44,7 @@ export default function SingleEvent({ evt }) {
 				<p>{evt?.attributes?.description}</p>
 				<h3>Venue: {evt?.attributes?.venue}</h3>
 				<p>{evt?.attributes?.address}</p>
+
 				<Link href="/events">
 					<a href={styles.back}>{"<"} Go back</a>
 				</Link>
@@ -108,10 +89,10 @@ export async function getStaticProps({ params: { slug } }) {
 		revalidate: 1,
 	};
 }
-// export async function getServerSideProps({ query: { slug } }) {
-// 	const res = await fetch(`${API_URL}/events/${slug}`);
-// 	const events = await res.json();
+// export async function getServerSideProps({ req }) {
+// 	const token = useCookie(req.headers.cookie);
+
 // 	return {
-// 		props: { evt: events[0] },
+// 		props: { token },
 // 	};
 // }

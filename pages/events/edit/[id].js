@@ -10,8 +10,8 @@ import Image from "next/image";
 import { FaImage } from "react-icons/fa";
 import Modal from "@/components/Modal";
 import ImageUpload from "@/components/ImageUpload";
-import cookie from "cookie";
-export default function EditEvent({ evt }) {
+import useCookie from "src/hooks/useCookie";
+export default function EditEvent({ evt, token }) {
 	const { name, description, venue, address, time, performers, date, image } =
 		evt.attributes;
 	const nameRef = useRef();
@@ -62,15 +62,16 @@ export default function EditEvent({ evt }) {
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify(data),
 		});
 		// console.log(JSON.stringify(data));
 		if (!res.ok) {
-			toast.error("Something went wrong");
+			toast.error("You cannot edit this post");
 		} else {
 			const evt = await res.json();
-			localStorage.setItem("res", JSON.stringify(evt));
+
 			router.push(`/events/${values.slug}`);
 		}
 	};
@@ -185,18 +186,19 @@ export default function EditEvent({ evt }) {
 					imageUploaded={imageUploaded}
 					sending={sending}
 					setSending={setSending}
+					token={token}
 				/>
 			</Modal>
 		</Layout>
 	);
 }
 
-export async function getServerSideProps({ params }) {
-	// console.log(cookie.parse(req.headers.cookie));
+export async function getServerSideProps({ params, req }) {
+	const token = useCookie(req.headers.cookie);
 	const res = await fetch(`${API_URL}/events/${params.id}?populate=*`);
 	const { data } = await res.json();
 
 	return {
-		props: { evt: data },
+		props: { evt: data, token },
 	};
 }

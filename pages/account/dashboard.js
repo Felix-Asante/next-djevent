@@ -4,8 +4,29 @@ import { API_URL } from "src/config";
 import useCookie from "src/hooks/useCookie";
 import styles from "@/styles/Dashboard.module.css";
 import DashboardEvent from "@/components/DashboardEvent";
-export default function DashboardPage({ events }) {
-	const deleteEvent = (id) => {};
+import { useRouter } from "next/router";
+export default function DashboardPage({ events, token }) {
+	const router = useRouter();
+	const deleteEvent = async (id) => {
+		if (!confirm("Are you sure you want to delete this post")) {
+			return;
+		}
+		const res = await fetch(`${API_URL}/events/${id}`, {
+			method: "DELETE",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+		});
+		// const { data } = await res.json();
+
+		if (!res?.ok) {
+			toast.error("You cannot delete this post");
+			return;
+		}
+		router.push("/account/dashboard");
+	};
+
 	return (
 		<Layout title="User Dashboard">
 			<div className={styles.dash}>
@@ -29,6 +50,6 @@ export async function getServerSideProps({ req }) {
 	const events = await res.json();
 
 	return {
-		props: { events },
+		props: { events, token },
 	};
 }

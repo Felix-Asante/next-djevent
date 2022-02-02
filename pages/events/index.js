@@ -3,7 +3,7 @@ import { API_URL } from "@/config/index";
 import EventItem from "@/components/EventItem";
 import { GET_ALL_EVENTS } from "@/config/ApiRoutes";
 import Pagination from "@/components/Pagination";
-const PER_PAGE = 5;
+const PER_PAGE = 2;
 export default function Home({ events, page, total }) {
 	const lastPage = Math.ceil(total / PER_PAGE);
 	return (
@@ -18,7 +18,9 @@ export default function Home({ events, page, total }) {
 	);
 }
 
-export async function getServerSideProps({ query: { page = 1 } }) {
+export async function getServerSideProps(context) {
+	const page = Object.keys(context.query).length > 0 ? context.query.page : 1;
+	// console.log(Object.keys(context.query).length);
 	// Total  events
 	const eventRes = await fetch(`${API_URL}/events/count`);
 	const total = await eventRes.json();

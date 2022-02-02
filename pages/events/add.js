@@ -5,8 +5,9 @@ import { API_URL } from "@/config/index";
 import { useRouter } from "next/router";
 import styles from "@/styles/Form.module.css";
 import { ToastContainer, toast } from "react-toastify";
+import useCookie from "src/hooks/useCookie";
 
-export default function AddEvent() {
+export default function AddEvent({ token }) {
 	const nameRef = useRef();
 	const performersRef = useRef();
 	const venueRef = useRef();
@@ -18,6 +19,7 @@ export default function AddEvent() {
 	const router = useRouter();
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+
 		const name = nameRef.current.value;
 		const performers = performersRef.current.value;
 		const address = addressRef.current.value;
@@ -50,6 +52,7 @@ export default function AddEvent() {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify(data),
 		});
@@ -59,7 +62,8 @@ export default function AddEvent() {
 		} else {
 			const evt = await res.json();
 			localStorage.setItem("res", JSON.stringify(evt));
-			router.push(`/events/${values.slug}`);
+			// console.log(evt);
+			router.push(`/events/${evt.slug}`);
 		}
 	};
 	return (
@@ -112,4 +116,9 @@ export default function AddEvent() {
 			</form>
 		</Layout>
 	);
+}
+
+export async function getServerSideProps({ req }) {
+	const token = useCookie(req.headers.cookie);
+	return { props: { token } };
 }

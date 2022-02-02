@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import { API_URL } from "@/config/index";
 import styles from "@/styles/Form.module.css";
-export default function ImageUpload({
-	evtId,
-	imageUploaded,
-	sending,
-	setSending,
-}) {
+import { toast, ToastContainer } from "react-toastify";
+export default function ImageUpload(props) {
+	const { evtId, imageUploaded, sending, setSending, token } = props;
+
 	const [image, setImage] = useState(null);
 	// send image to server
 	const handleSubmit = async (e) => {
@@ -18,13 +16,19 @@ export default function ImageUpload({
 		formData.append("refId", evtId);
 		formData.append("field", "image");
 		setSending(true);
+
 		const res = await fetch(`${API_URL}/upload`, {
 			method: "POST",
 			body: formData,
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
 		});
 
 		if (res.ok) {
 			imageUploaded();
+		} else if (res.status === 401) {
+			toast.error("Authorized");
 		}
 	};
 	// handle file change
@@ -34,12 +38,13 @@ export default function ImageUpload({
 	return (
 		<div className={styles.form}>
 			<h1>Upload Event Image</h1>
+			<ToastContainer theme="colored" />
 			<form onSubmit={handleSubmit}>
 				<div className={styles.file}>
 					<input type="file" onChange={handleFileChange} />
 				</div>
 				{!sending && <input type="submit" value="Upload" className="btn" />}
-				{sending && <p>Sending.....</p>}
+				{sending && <p>Uploading.....</p>}
 			</form>
 		</div>
 	);
