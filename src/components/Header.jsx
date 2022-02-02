@@ -1,6 +1,6 @@
 import Link from "next/link";
-import styles from "@/styles/header.module.css";
-import Search from "./search";
+import styles from "@/styles/Header.module.css";
+import Search from "./Search";
 import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
 import { useAuthContext } from "@/context/AuthContext";
 export default function Header() {
